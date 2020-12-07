@@ -1,0 +1,109 @@
+syntax = "proto3";
+package com.github.opendglab;
+enum DGEvent {
+    CONNECT = 0; //连接 (发送数据体 DGConnect / 接收数据体 DGConnect)
+    GETDEVICE = 1; //获取设备 (没有发送数据体 / 接收数据体 DGDeviceList)
+    LOCKDEVICE = 2; //锁定设备为远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
+    UNLOCKDEVICE = 3; //解锁设备远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
+    GETSTRENGTH = 4; //获取强度 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGDeviceStrength)
+    SETSTRENGTH = 5; //设置强度 (发送数据体 DGDeviceID, DGStrength / 无返回)
+    GETWAVELIST = 6; //获取波形列表 (没有发送数据体 / 接收数据体 DGWaveList)
+    GETWAVE = 7; //获取波形名 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGWave)
+    SETWAVE = 8; //设定波形 (发送数据体 DGDeviceID, DGWave / 无返回)
+    CUSTOMWAVE = 9; //发送自定义波形 (发送数据体 DGDeviceID, DGCustomWave / 无返回)
+    CLEARCUSTOM = 10; //清除自定义波形 (发送数据体 DGDeviceID / 无返回)
+    DEVICERESET = 11; //设备状态已重置 (不发送 / 接收数据体 DGDeviceID)
+    CANTDOTHIS = 12; //无法执行的响应 (不发送 / 接收数据体 DGError, 可选 DGDeviceID)
+}
+//错误响应
+enum DGError {
+    UNKNOWN = 0; //未知错误
+    UNAUTHED = 1; //未认证的操作
+    DEVICENOTLOCK = 2; //未锁定设备为远程
+    DEVICENOTLOCKBYYOU = 3; //此设备不是由您锁定的
+    DEVICEOFFLINE = 4; //设备已离线
+}
+//设备通道
+enum DGDeviceChannel {
+    CHANNEL_A = 0; //A 通道
+    CHANNEL_B = 0; //B 通道
+}
+//客户端 -> OpenDGLab 控制器
+message DGRequest {
+    //连接
+    message DGConnect {
+        string appName = 1; //应用名
+        string uuid = 2; //应用 ID
+        string token = 3; //预授权密钥
+    }
+    //设备 ID
+    message DGDeviceID {
+        string deviceId = 1; //设备 ID
+        DGDeviceChannel deviceChannel = 2; //设备通道
+    }
+    //强度设置
+    message DGStrength {
+        int32 strengthA = 1; //A 通道
+        int32 strengthB = 2; //B 通道
+    }
+    //波形
+    message DGWave {
+        string waveName = 1; //波形名
+    }
+    //自定义波形
+    message DGCustomWave {
+        repeated bytes bytes = 1; //波形数据 必须为3个字节
+    }
+    int32 version = 1; //协议版本 目前为 1
+    DGEvent event = 2; //操作
+    DGConnect connect = 3; //连接参数
+    DGDeviceID device = 4; //设备 ID
+    DGStrength strength = 5; //强度
+    DGWave wave = 6; //波形
+    repeated DGCustomWave customWave = 7; //自定义波形
+}
+//OpenDGLab 控制器 -> 客户端
+message DGResponse {
+    //连接
+    message DGConnect {
+        string token = 1; //授权密钥
+    }
+    //设备列表
+    message DGDeviceList {
+        repeated DGDevice devices = 1; //设备列表
+    }
+    //设备
+    message DGDevice {
+        string id = 1; //设备 ID
+        bool isLockedByRemote = 2; //是否处于远程锁定模式
+        bool isLockedByMe = 3; //是否是被本软件锁定的
+    }
+    //设备 ID
+    message DGDeviceID {
+        string deviceId = 1; //设备 ID
+        DGDeviceChannel deviceChannel = 2; //设备通道
+    }
+    //强度
+    message DGDeviceStrength {
+        int32 strengthA = 1; //A 通道
+        int32 strengthB = 2; //B 通道
+    }
+    //波形列表
+    message DGWaveList {
+        repeated string wave = 1; //波形名称列表
+    }
+    //波形
+    message DGWave {
+        string wave = 1; //波形名
+    }
+    int32 version = 1; //协议版本 目前为 1
+    DGEvent event = 2; //操作
+    DGConnect connect = 3; //连接返回
+    DGDeviceList deviceList = 4; // 设备列表
+    DGDeviceID deviceId = 5; //设备 ID
+    DGDevice device = 6; //单设备
+    DGDeviceStrength strength = 7; //强度
+    DGWaveList waveList = 8; //波形列表
+    DGWave waveName = 9; //波形名
+    DGError error = 10; //响应错误
+}
