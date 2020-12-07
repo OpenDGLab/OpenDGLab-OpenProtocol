@@ -26,7 +26,7 @@ enum DGError {
 //设备通道
 enum DGDeviceChannel {
     CHANNEL_A = 0; //A 通道
-    CHANNEL_B = 0; //B 通道
+    CHANNEL_B = 1; //B 通道
 }
 //客户端 -> OpenDGLab 控制器
 message DGRequest {
