@@ -1,7 +1,7 @@
 syntax = "proto3";
 package com.github.opendglab;
 enum DGEvent {
-    UNSET = 0; //未设定
+    EVENTUNSET = 0; //未设定
     CONNECT = 1; //连接 (发送数据体 DGConnect / 接收数据体 DGConnect)
     GETDEVICE = 2; //获取设备 (没有发送数据体 / 接收数据体 DGDeviceList)
     LOCKDEVICE = 3; //锁定设备为远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
@@ -19,7 +19,7 @@ enum DGEvent {
 }
 //错误响应
 enum DGError {
-    UNSET = 0; //未设定
+    ERRORUNSET = 0; //未设定
     UNKNOWN = 1; //未知错误
     UNAUTHED = 2; //未认证的操作
     DEVICENOTLOCK = 3; //未锁定设备为远程
