@@ -1,32 +1,36 @@
 syntax = "proto3";
 package com.github.opendglab;
 enum DGEvent {
-    CONNECT = 0; //连接 (发送数据体 DGConnect / 接收数据体 DGConnect)
-    GETDEVICE = 1; //获取设备 (没有发送数据体 / 接收数据体 DGDeviceList)
-    LOCKDEVICE = 2; //锁定设备为远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
-    UNLOCKDEVICE = 3; //解锁设备远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
-    GETSTRENGTH = 4; //获取强度 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGDeviceStrength)
-    SETSTRENGTH = 5; //设置强度 (发送数据体 DGDeviceID, DGStrength / 无返回)
-    GETWAVELIST = 6; //获取波形列表 (没有发送数据体 / 接收数据体 DGWaveList)
-    GETWAVE = 7; //获取波形名 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGWave)
-    SETWAVE = 8; //设定波形 (发送数据体 DGDeviceID, DGWave / 无返回)
-    CUSTOMWAVE = 9; //发送自定义波形 (发送数据体 DGDeviceID, DGCustomWave / 无返回)
-    CLEARCUSTOM = 10; //清除自定义波形 (发送数据体 DGDeviceID / 无返回)
-    DEVICERESET = 11; //设备状态已重置 (不发送 / 接收数据体 DGDeviceID)
-    CANTDOTHIS = 12; //无法执行的响应 (不发送 / 接收数据体 DGError, 可选 DGDeviceID)
+    UNSET = 0; //未设定
+    CONNECT = 1; //连接 (发送数据体 DGConnect / 接收数据体 DGConnect)
+    GETDEVICE = 2; //获取设备 (没有发送数据体 / 接收数据体 DGDeviceList)
+    LOCKDEVICE = 3; //锁定设备为远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
+    UNLOCKDEVICE = 4; //解锁设备远程模式 (发送数据体 DGDeviceID / 接收数据体 DGDevice)
+    GETSTRENGTH = 5; //获取强度 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGDeviceStrength)
+    SETSTRENGTH = 6; //设置强度 (发送数据体 DGDeviceID, DGStrength / 无返回)
+    GETWAVELIST = 7; //获取波形列表 (没有发送数据体 / 接收数据体 DGWaveList)
+    GETWAVE = 8; //获取波形名 (发送数据体 DGDeviceID / 接收数据体 DGDeviceID, DGWave)
+    SETWAVE = 9; //设定波形 (发送数据体 DGDeviceID, DGWave / 无返回)
+    CUSTOMWAVE = 10; //发送自定义波形 (发送数据体 DGDeviceID, DGCustomWave / 无返回)
+    CLEARCUSTOM = 11; //清除自定义波形 (发送数据体 DGDeviceID / 无返回)
+    DEVICERESET = 12; //设备状态已重置 (不发送 / 接收数据体 DGDeviceID)
+    CANTDOTHIS = 13; //无法执行的响应 (不发送 / 接收数据体 DGError, 可选 DGDeviceID)
+    PING = 14; //Ping
 }
 //错误响应
 enum DGError {
-    UNKNOWN = 0; //未知错误
-    UNAUTHED = 1; //未认证的操作
-    DEVICENOTLOCK = 2; //未锁定设备为远程
-    DEVICENOTLOCKBYYOU = 3; //此设备不是由您锁定的
-    DEVICEOFFLINE = 4; //设备已离线
+    UNSET = 0; //未设定
+    UNKNOWN = 1; //未知错误
+    UNAUTHED = 2; //未认证的操作
+    DEVICENOTLOCK = 3; //未锁定设备为远程
+    DEVICENOTLOCKBYYOU = 4; //此设备不是由您锁定的
+    DEVICEOFFLINE = 5; //设备已离线
 }
 //设备通道
 enum DGDeviceChannel {
-    CHANNEL_A = 0; //A 通道
-    CHANNEL_B = 1; //B 通道
+    UNSET = 0; //未设定
+    CHANNEL_A = 1; //A 通道
+    CHANNEL_B = 2; //B 通道
 }
 //客户端 -> OpenDGLab 控制器
 message DGRequest {
